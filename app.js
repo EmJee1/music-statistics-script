@@ -1,4 +1,5 @@
 const bulkParseMetadata = require('./bulkParseMetadata.js')
+const updateCount = require('./updateCount.js')
 const scan = require('./scan.js')
 const fs = require('fs')
 
@@ -13,22 +14,17 @@ const outputMetadata = async files => {
 	parsedTracks.forEach(track => {
 		const { fileType, genre } = track
 
-		if (CONFIG.filetypes.countItemsPerFiletype && fileType) {
-			const statFiletype = statistics.filetypes[fileType]
-			statistics.filetypes[fileType] = statFiletype ? statFiletype + 1 : 1
-		}
+		if (CONFIG.filetypes.countItemsPerFiletype && fileType)
+			updateCount(statistics, 'filetypes', fileType)
 
 		if (CONFIG.genres.countItemsPerGenre && genre)
 			genre.forEach(genre => {
-				const updateGenreCount = genre => {
-					const statGenre = statistics.genres[genre]
-					return (statistics.genres[genre] = statGenre ? statGenre + 1 : 1)
-				}
-
 				if (!genre.includes(CONFIG.genres.splitCharacter))
-					return updateGenreCount(genre)
+					return updateCount(statistics, 'genres', genre)
 
-				genre.split(CONFIG.genres.splitCharacter).forEach(updateGenreCount)
+				genre
+					.split(CONFIG.genres.splitCharacter)
+					.forEach(genre => updateCount(statistics, 'genres', genre))
 			})
 	})
 
