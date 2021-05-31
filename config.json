@@ -1,0 +1,11 @@
+{
+	"scanDirectory": "F:\\Music\\New\\K-pop",
+	"filetypes": {
+		"allowedFiletypes": [".mp3", ".flac"],
+		"countItemsPerFiletype": true
+	},
+	"genres": {
+		"splitCharacter": "; ",
+		"countItemsPerGenre": true
+	}
+}
