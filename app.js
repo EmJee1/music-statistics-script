@@ -9,10 +9,11 @@ const audioFiles = scan(CONFIG.scanDirectory)
 
 const outputMetadata = async files => {
 	const parsedTracks = await bulkParseMetadata(files)
+	console.log(parsedTracks[0])
 
-	let statistics = { filetypes: {}, genres: {} }
+	let statistics = { filetypes: {}, genres: {}, years: {} }
 	parsedTracks.forEach(track => {
-		const { fileType, genre } = track
+		const { fileType, genre, year } = track
 
 		if (CONFIG.filetypes.countItemsPerFiletype && fileType)
 			updateCount(statistics, 'filetypes', fileType)
@@ -26,6 +27,9 @@ const outputMetadata = async files => {
 					.split(CONFIG.genres.splitCharacter)
 					.forEach(genre => updateCount(statistics, 'genres', genre))
 			})
+
+		if (CONFIG.years.countItemsPerYear && year)
+			updateCount(statistics, 'years', year)
 	})
 
 	return statistics

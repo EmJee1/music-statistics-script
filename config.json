@@ -7,5 +7,12 @@
 	"genres": {
 		"splitCharacter": "; ",
 		"countItemsPerGenre": true
+	},
+	"years": {
+		"countItemsPerYear": true
+	},
+	"albums": {
+		"countTotalAlbums": true,
+		"countAlbumsPerArtist": true
 	}
 }
