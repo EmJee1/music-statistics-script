@@ -9,4 +9,20 @@ const updateCount = (object, identifier, name, incrementWith, startWith) => {
 	}
 }
 
-module.exports = updateCount
+const updateSplittedCount = (
+	object,
+	identifier,
+	unsplittedName,
+	splitCharacter
+) => {
+	unsplittedName.forEach(artist => {
+		if (!artist.includes(splitCharacter))
+			updateCount(object, identifier, artist)
+		else
+			artist
+				.split(splitCharacter)
+				.forEach(artist => updateCount(object, identifier, artist))
+	})
+}
+
+module.exports = { updateCount, updateSplittedCount }

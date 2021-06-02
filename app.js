@@ -1,5 +1,5 @@
 const bulkParseMetadata = require('./bulkParseMetadata.js')
-const updateCount = require('./updateCount.js')
+const { updateCount, updateSplittedCount } = require('./updateCount.js')
 const scan = require('./scan.js')
 const fs = require('fs')
 
@@ -9,27 +9,41 @@ const audioFiles = scan(CONFIG.scanDirectory)
 
 const outputMetadata = async files => {
 	const parsedTracks = await bulkParseMetadata(files)
-	console.log(parsedTracks[0])
 
-	let statistics = { filetypes: {}, genres: {}, years: {} }
+	let statistics = {
+		filetypes: {},
+		genres: {},
+		years: {},
+		albums: {},
+		artists: {},
+	}
 	parsedTracks.forEach(track => {
-		const { fileType, genre, year } = track
+		const { fileType, genre, year, album, artists } = track
 
 		if (CONFIG.filetypes.countItemsPerFiletype && fileType)
 			updateCount(statistics, 'filetypes', fileType)
 
 		if (CONFIG.genres.countItemsPerGenre && genre)
-			genre.forEach(genre => {
-				if (!genre.includes(CONFIG.genres.splitCharacter))
-					return updateCount(statistics, 'genres', genre)
-
-				genre
-					.split(CONFIG.genres.splitCharacter)
-					.forEach(genre => updateCount(statistics, 'genres', genre))
-			})
+			updateSplittedCount(
+				statistics,
+				'genres',
+				genre,
+				CONFIG.genres.splitCharacter
+			)
 
 		if (CONFIG.years.countItemsPerYear && year)
 			updateCount(statistics, 'years', year)
+
+		if (CONFIG.albums.countAlbums && album)
+			updateCount(statistics, 'albums', album)
+
+		if (CONFIG.artists.countArtists && artists)
+			updateSplittedCount(
+				statistics,
+				'artists',
+				artists,
+				CONFIG.artists.splitCharacter
+			)
 	})
 
 	return statistics

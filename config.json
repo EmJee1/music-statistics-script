@@ -12,7 +12,10 @@
 		"countItemsPerYear": true
 	},
 	"albums": {
-		"countTotalAlbums": true,
-		"countAlbumsPerArtist": true
+		"countAlbums": true
+	},
+	"artists": {
+		"splitCharacter": "; ",
+		"countArtists": true
 	}
 }
